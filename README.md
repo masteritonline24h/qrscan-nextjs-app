@@ -52,7 +52,14 @@ npm install @zxing/browser @zxing/library
 CODE HERE:
 
 "use client";
-import { useEffect, useRef, useImperativeHandle, forwardRef, useState } from "react";
+
+import {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+  useState,
+} from "react";
 import { BrowserMultiFormatReader } from "@zxing/browser";
 
 const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
@@ -84,6 +91,7 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "environment" },
         });
+
         if (!isMounted) {
           stream.getTracks().forEach((track) => track.stop());
           return;
@@ -94,6 +102,7 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
           videoRef.current.srcObject = stream;
           await videoRef.current.play();
         }
+
         setStatus(""); // Clear status once camera is running
 
         // 3. Start scanning frames
@@ -104,8 +113,9 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
             if (isMounted && result && onScanSuccess) {
               onScanSuccess(result.getText());
             }
-          }
+          },
         );
+
         if (isMounted) {
           controlsRef.current = controls;
         } else {
@@ -115,18 +125,35 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
         if (!isMounted) return;
         console.error("Camera Error:", err);
 
-        if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
-          setStatus("Camera permission denied. Please allow camera access in your browser bar.");
-        } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
+        if (
+          err.name === "NotAllowedError" ||
+          err.name === "PermissionDeniedError"
+        ) {
+          setStatus(
+            "Camera permission denied. Please allow camera access in your browser bar.",
+          );
+        } else if (
+          err.name === "NotFoundError" ||
+          err.name === "DevicesNotFoundError"
+        ) {
           setStatus("No camera found on this device.");
-        } else if (err.name === "NotReadableError" || err.name === "TrackStartError") {
-          setStatus("Camera is in use by another app (e.g. Zoom, Teams, or another browser tab).");
+        } else if (
+          err.name === "NotReadableError" ||
+          err.name === "TrackStartError"
+        ) {
+          setStatus(
+            "Camera is in use by another app (e.g. Zoom, Teams, or another browser tab).",
+          );
         } else {
-          setStatus("Failed to access camera. Ensure you are on https:// or localhost.");
+          setStatus(
+            "Failed to access camera. Ensure you are on https:// or localhost.",
+          );
         }
       }
     };
+
     initCamera();
+
     return () => {
       isMounted = false;
 
@@ -135,6 +162,7 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
         controlsRef.current.stop();
         controlsRef.current = null;
       }
+
       // Stop media tracks and release camera hardware
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject;
@@ -143,6 +171,7 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
       }
     };
   }, []);
+
   return (
     <div
       style={{
@@ -159,10 +188,18 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
       }}
     >
       {status ? (
-        <p style={{ color: "#fff", padding: "1.5rem", textAlign: "center", fontSize: "0.95rem" }}>
+        <p
+          style={{
+            color: "#fff",
+            padding: "1.5rem",
+            textAlign: "center",
+            fontSize: "0.95rem",
+          }}
+        >
           {status}
         </p>
       ) : null}
+
       <video
         ref={videoRef}
         muted
@@ -195,8 +232,10 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
     </div>
   );
 });
+
 QrScanner.displayName = "QrScanner";
 export default QrScanner;
+
 
 ----------------------------------------------------------------------------
 
