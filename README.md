@@ -52,7 +52,6 @@ npm install @zxing/browser @zxing/library
 CODE HERE:
 
 "use client";
-
 import { useEffect, useRef, useImperativeHandle, forwardRef, useState } from "react";
 import { BrowserMultiFormatReader } from "@zxing/browser";
 
@@ -85,7 +84,6 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "environment" },
         });
-
         if (!isMounted) {
           stream.getTracks().forEach((track) => track.stop());
           return;
@@ -96,7 +94,6 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
           videoRef.current.srcObject = stream;
           await videoRef.current.play();
         }
-
         setStatus(""); // Clear status once camera is running
 
         // 3. Start scanning frames
@@ -109,7 +106,6 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
             }
           }
         );
-
         if (isMounted) {
           controlsRef.current = controls;
         } else {
@@ -130,9 +126,7 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
         }
       }
     };
-
     initCamera();
-
     return () => {
       isMounted = false;
 
@@ -141,7 +135,6 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
         controlsRef.current.stop();
         controlsRef.current = null;
       }
-
       // Stop media tracks and release camera hardware
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject;
@@ -150,7 +143,6 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
       }
     };
   }, []);
-
   return (
     <div
       style={{
@@ -171,7 +163,6 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
           {status}
         </p>
       ) : null}
-
       <video
         ref={videoRef}
         muted
@@ -204,9 +195,9 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
     </div>
   );
 });
-
 QrScanner.displayName = "QrScanner";
 export default QrScanner;
+
 ----------------------------------------------------------------------------
 
 3. Use the Component in a Page
