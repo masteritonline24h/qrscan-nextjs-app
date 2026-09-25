@@ -35,6 +35,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 ------------------------------------------------------------------------------------------------------------------------------------------------
+
 To scan QR codes in Next.js, the most reliable and widely used library is html5-qrcode. It handles camera permissions, video streams, and decoding efficiently across both desktop and mobile browsers.
 
 Since camera APIs rely on browser features (navigator.mediaDevices), the scanner component must run as a Client Component using useClient or dynamic imports without SSR.
@@ -53,13 +54,7 @@ CODE HERE:
 
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useImperativeHandle,
-  forwardRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useImperativeHandle, forwardRef, useState } from "react";
 import { BrowserMultiFormatReader } from "@zxing/browser";
 
 const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
@@ -113,7 +108,7 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
             if (isMounted && result && onScanSuccess) {
               onScanSuccess(result.getText());
             }
-          },
+          }
         );
 
         if (isMounted) {
@@ -125,29 +120,14 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
         if (!isMounted) return;
         console.error("Camera Error:", err);
 
-        if (
-          err.name === "NotAllowedError" ||
-          err.name === "PermissionDeniedError"
-        ) {
-          setStatus(
-            "Camera permission denied. Please allow camera access in your browser bar.",
-          );
-        } else if (
-          err.name === "NotFoundError" ||
-          err.name === "DevicesNotFoundError"
-        ) {
+        if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+          setStatus("Camera permission denied. Please allow camera access in your browser bar.");
+        } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
           setStatus("No camera found on this device.");
-        } else if (
-          err.name === "NotReadableError" ||
-          err.name === "TrackStartError"
-        ) {
-          setStatus(
-            "Camera is in use by another app (e.g. Zoom, Teams, or another browser tab).",
-          );
+        } else if (err.name === "NotReadableError" || err.name === "TrackStartError") {
+          setStatus("Camera is in use by another app (e.g. Zoom, Teams, or another browser tab).");
         } else {
-          setStatus(
-            "Failed to access camera. Ensure you are on https:// or localhost.",
-          );
+          setStatus("Failed to access camera. Ensure you are on https:// or localhost.");
         }
       }
     };
@@ -188,14 +168,7 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
       }}
     >
       {status ? (
-        <p
-          style={{
-            color: "#fff",
-            padding: "1.5rem",
-            textAlign: "center",
-            fontSize: "0.95rem",
-          }}
-        >
+        <p style={{ color: "#fff", padding: "1.5rem", textAlign: "center", fontSize: "0.95rem" }}>
           {status}
         </p>
       ) : null}
@@ -235,8 +208,6 @@ const QrScanner = forwardRef(({ onScanSuccess }, ref) => {
 
 QrScanner.displayName = "QrScanner";
 export default QrScanner;
-
-
 ----------------------------------------------------------------------------
 
 3. Use the Component in a Page
